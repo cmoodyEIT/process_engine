@@ -28,13 +28,13 @@ ActiveRecord::Schema.define(version: 20170706194257) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "process_engine_process_instances", force: :cascade do |t|
+  create_table "process_engine_instances", force: :cascade do |t|
     t.string "type"
     t.boolean "complete"
-    t.jsonb "current_state", default: "{}", null: false
+    t.jsonb "current_state", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["current_state"], name: "index_process_engine_process_instances_on_current_state", using: :gin
+    t.index ["current_state"], name: "index_process_engine_instances_on_current_state", using: :gin
   end
 
 end
