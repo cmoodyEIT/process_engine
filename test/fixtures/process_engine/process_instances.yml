@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  complete: false
+  current_state: 
+
+two:
+  type: 
+  complete: false
+  current_state: 
