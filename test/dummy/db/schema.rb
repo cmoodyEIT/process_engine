@@ -15,7 +15,16 @@ ActiveRecord::Schema.define(version: 20170706194257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "joined_processes", force: :cascade do |t|
+  create_table "process_engine_instances", force: :cascade do |t|
+    t.string "type"
+    t.boolean "complete"
+    t.jsonb "current_state", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["current_state"], name: "index_process_engine_instances_on_current_state", using: :gin
+  end
+
+  create_table "process_engine_joined_instances", force: :cascade do |t|
     t.integer "first_active_record_id"
     t.string "first_active_record_type"
     t.integer "second_active_record_id"
@@ -26,15 +35,6 @@ ActiveRecord::Schema.define(version: 20170706194257) do
     t.string "has_as"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "process_engine_instances", force: :cascade do |t|
-    t.string "type"
-    t.boolean "complete"
-    t.jsonb "current_state", default: {}, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["current_state"], name: "index_process_engine_instances_on_current_state", using: :gin
   end
 
 end
