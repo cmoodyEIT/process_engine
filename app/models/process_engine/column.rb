@@ -36,14 +36,8 @@ class ProcessEngine::Column
     end
   end
   def active_record_was(current_state_was)
-    @active_record ||= klass.find(value(current_state_was))
+    @active_record_was ||= klass.find(value(current_state_was))
   end
-
-  # def values(current_state)
-  #   (current_state[column_name] || []).map{|val| type_caster.cast val}
-  # end
-
-
 
   private
     def type_caster
@@ -75,48 +69,6 @@ class ProcessEngine::Column
         column.active_record(current_state,true,arg)
       end
     end
-  #   def setup_active
-  #     rel_name = @name
-  #     @name += '_id'
-  # #   add_to_whitelist("#{column_name}_id")
-  #     ar_options = options.dup
-  #     ar_options[:type] = :integer
-  #     ar_options[:ar_type] = klass.to_s
-  #   # @process_columns["#{column_name}_id"] = ar_options
-  #     base_class.send(:define_method,type.to_s.pluralize) {klass.all}
-  # #   # @inspector_fields << "#{column_name}_id"
-  #     base_class.send(:define_method,"#{name}_id") do
-  #       val = current_state["#{name}_id"]
-  #       val.present? ? val.to_i : val
-  #     end
-  #   class_module.send(:define_method, "#{column_name}_id_was") do
-  #     val = current_state_was["#{column_name}_id"]
-  #     val.present? ? val.to_i : val
-  #   end
-  #   class_module.send(:define_method, "#{column_name}_id=") do |arg|
-  #     current_state["#{column_name}_id"] = arg
-  #   end
-  #   class_module.send(:define_method, "#{column_name}=") do |arg|
-  #     instance_variable_set("@#{column_name}",arg)
-  #     send("#{column_name}_id=",arg.try(:id))
-  #   end
-  #   class_module.send(:define_method, column_name) do
-  #     return nil unless (id = current_state["#{column_name}_id"]).present?
-  #     current = instance_variable_get("@#{column_name}")
-  #     if current.nil? || current.try(:id) != id
-  #       current = klass.find(id)
-  #       send("#{column_name}=",current)
-  #     end
-  #     current
-  #   end
-  #   class_module.send(:define_method, "#{column_name}_was") do
-  #     current = instance_variable_get("@#{column_name}_was")
-  #     return current if current.present?
-  #     return nil unless (id = current_state_was["#{column_name}_id"]).present?
-  #     current = klass.find(id)
-  #     instance_variable_set("@#{column_name}_was",current)
-  #     current
-  #   end
   #   class_module.send(:define_method,"#{column_name}_id_type")    {:number}
   #   class_module.send(:define_method,"#{column_name}_id_view_type")  {:active_record}
   #   class_module.send(:define_method,"#{column_name}_options") {klass.all.map(&:to_s)}
