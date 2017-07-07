@@ -27,8 +27,8 @@ class TestProcessTest < ActiveSupport::TestCase
       assert_equal date, test_process.date
     end
     test "time type" do
-      time = Time.now
+      time = DateTime.now.utc
       test_process = TestProcess.new(time: time.to_s)
-      assert_equal time, test_process.time
+      assert (time - test_process.time).abs < 1.0
     end
 end

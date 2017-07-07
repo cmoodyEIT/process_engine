@@ -1,6 +1,6 @@
 module ProcessEngine::Schema
   ################################
-  #  Allowed Types are: :string, :text, :float, :integer :date, :time, :boolean
+  #  Allowed Types are: :string, :text, :float, :integer :date, :date_time, :boolean
   #  Any inheritance of ActiveRecord::Base
   #  If type is left blank, defaults to :string
   def has_columns(columns={})

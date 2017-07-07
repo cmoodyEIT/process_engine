@@ -6,6 +6,6 @@ class TestProcess < ProcessEngine::Instance
     integer:  {type: :integer},
     boolean:  {type: :boolean},
     date:     {type: :date},
-    time:     {type: :time}
+    time:     {type: :date_time}
   )
 end
