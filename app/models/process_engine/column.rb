@@ -4,55 +4,91 @@ class ProcessEngine::Column
     @type         = options[:type] || :string
     @options      = options || {}
     @klass        = type.to_s.classify.safe_constantize || String
-    @class_module = parent
-    setup_constant unless @klass < ActiveRecord::Base
-    # setup_active(class_module,column_name,options,type,klass)       if klass < ActiveRecord::Base
-    @class_module.send(:define_method,"#{name}_options") {options[:options]} if options[:options].present?
-    @class_module.send(:define_method,"#{name}_type")    {options[:type] || :string}
+    @base_class   = parent
+    define_methods
+    base_class.send(:define_method,"#{name}_options") {options[:options]} if options[:options].present?
+    base_class.send(:define_method,"#{name}_type")    {options[:type] || :string}
   end
-  attr_reader :name, :type
+  attr_reader :name, :type, :klass, :options, :base_class
   def singular?() type.to_s == type.to_s.singularize end
+  def active_record?() klass < ActiveRecord::Base end
+  def column_name()
+    @column_name = name.to_s
+    if active_record?
+      @column_name += (singular? ? '_id' : '_ids')
+    end
+    @column_name
+  end
   def value(current_state,update=false,value=nil)
     if update
-      current_state[name.to_s] = value
+      current_state[column_name] = value
     else
-      type_caster.cast current_state[name.to_s]
+      res = [current_state[column_name]].flatten.map{|val| type_caster.cast val}
+      singular? ? res[0] : res
     end
   end
-  def values(current_state)
-    (current_state[name.to_s] || []).map{|val| type_caster.cast val}
+  def active_record(current_state,update=false,arg=nil)
+    if update
+      value(current_state,true,arg.id)
+      @active_record = arg
+    else
+      @active_record ||= klass.find(value(current_state))
+    end
   end
+  def active_record_was(current_state_was)
+    @active_record ||= klass.find(value(current_state_was))
+  end
+
+  # def values(current_state)
+  #   (current_state[column_name] || []).map{|val| type_caster.cast val}
+  # end
+
+
 
   private
     def type_caster
-      "ActiveRecord::Type::#{type.to_s.classify}".safe_constantize.new
+      caster_type = active_record? ? 'Integer' : type.to_s.classify
+      "ActiveRecord::Type::#{caster_type}".safe_constantize.new
     end
-    def setup_constant
-      method = singular? ? :value : :values
+    def define_methods
       column = self
-      @class_module.send(:define_method,"#{name}") do
-        column.send(method,current_state)
+      base_class.send(:define_method,"#{column_name}") do
+        column.value(current_state)
       end
-      @class_module.send(:define_method,"#{name}_was") do
-        column.send(method,current_state_was)
+      base_class.send(:define_method,"#{column_name}_was") do
+        column.value(current_state_was)
       end
-      @class_module.send(:define_method,"#{name}=") do |arg|
+      base_class.send(:define_method,"#{column_name}=") do |arg|
         column.value(current_state,true,arg)
       end
-
+      define_active_records if active_record?
     end
-  # def setup_active(class_module,column_name,options,type,klass)
-  #   add_to_whitelist("#{column_name}_id")
-  #   ar_options = options.dup
-  #   ar_options[:type] = :number
-  #   ar_options[:ar_type] = klass.to_s
+    def define_active_records
+      column = self
+      base_class.send(:define_method,"#{name}") do
+        column.active_record(current_state)
+      end
+      base_class.send(:define_method,"#{name}_was") do
+        column.active_record_was(current_state_was)
+      end
+      base_class.send(:define_method,"#{name}=") do |arg|
+        column.active_record(current_state,true,arg)
+      end
+    end
+  #   def setup_active
+  #     rel_name = @name
+  #     @name += '_id'
+  # #   add_to_whitelist("#{column_name}_id")
+  #     ar_options = options.dup
+  #     ar_options[:type] = :integer
+  #     ar_options[:ar_type] = klass.to_s
   #   # @process_columns["#{column_name}_id"] = ar_options
-  #   class_module.send(:define_method,type.to_s.pluralize) {klass.all}
-  #   # @inspector_fields << "#{column_name}_id"
-  #   class_module.send(:define_method,"#{column_name}_id") do
-  #     val = current_state["#{column_name}_id"]
-  #     val.present? ? val.to_i : val
-  #   end
+  #     base_class.send(:define_method,type.to_s.pluralize) {klass.all}
+  # #   # @inspector_fields << "#{column_name}_id"
+  #     base_class.send(:define_method,"#{name}_id") do
+  #       val = current_state["#{name}_id"]
+  #       val.present? ? val.to_i : val
+  #     end
   #   class_module.send(:define_method, "#{column_name}_id_was") do
   #     val = current_state_was["#{column_name}_id"]
   #     val.present? ? val.to_i : val
