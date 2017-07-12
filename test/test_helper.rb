@@ -10,7 +10,7 @@ Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 class Minitest::Test
   FlyingTable.create(things: {name: :string,static_process_id: :integer})
   eval <<-EOF
-  class ActiveProcess < ProcessEngine::Instance
+  class ActiveProcess < ActiveProcess::Instance
     has_columns(thing: {type: :thing})
   end
   EOF

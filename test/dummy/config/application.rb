@@ -3,7 +3,7 @@ require_relative 'boot'
 require 'rails/all'
 
 Bundler.require(*Rails.groups)
-require "process_engine"
+require "active_process"
 
 module Dummy
   class Application < Rails::Application

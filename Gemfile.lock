@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    process_engine (0.1.0)
+    active_process (0.1.0)
       pg (~> 0.21)
       rails (~> 5.1.2)
 
@@ -114,8 +114,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_process!
   flying_table
-  process_engine!
 
 BUNDLED WITH
    1.15.1

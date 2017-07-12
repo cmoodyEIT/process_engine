@@ -1,2 +1,2 @@
-ProcessEngine::Engine.routes.draw do
+ActiveProcess::Engine.routes.draw do
 end

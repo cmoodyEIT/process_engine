@@ -1,4 +1,4 @@
-# ProcessEngine
+# ActiveProcess
 Short description and motivation.
 
 ## Usage
@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'process_engine'
+gem 'active_process'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install process_engine
+$ gem install active_process
 ```
 
 ## Contributing

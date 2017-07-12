@@ -1,4 +1,4 @@
-class TestProcess < ProcessEngine::Instance
+class TestProcess < ActiveProcess::Instance
   has_and_belongs_to_many :collection_processes
   has_columns(
     text:     {type: :text},

@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount ProcessEngine::Engine => "/process_engine"
+  mount ActiveProcess::Engine => "/active_process"
 end
