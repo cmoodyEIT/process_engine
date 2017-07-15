@@ -1,4 +1,5 @@
 class ActiveProcess::Column
+  include Validation
   def initialize(name,options,parent)
     @name         = name
     @type         = options[:type] || :string
