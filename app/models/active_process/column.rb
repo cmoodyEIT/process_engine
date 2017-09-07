@@ -16,7 +16,7 @@ class ActiveProcess::Column
   def column_name()
     @column_name = name.to_s
     if active_record?
-      @column_name += (singular? ? '_id' : '_ids')
+      @column_name = name.to_s.singularize + (singular? ? '_id' : '_ids')
     end
     @column_name
   end
@@ -30,7 +30,7 @@ class ActiveProcess::Column
   end
   def active_record(current_state,update=false,arg=nil)
     if update
-      value(current_state,true,arg.id)
+      value(current_state,true,(singular? ? arg.id : arg.map(&:id)))
       @active_record = arg
     else
       @active_record ||= klass.find(value(current_state))

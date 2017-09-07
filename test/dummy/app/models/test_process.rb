@@ -9,7 +9,8 @@ class TestProcess < ActiveProcess::Instance
     date:      {type: :date},
     time:      {type: :date_time},
     dependent: {type: :string, dependent: :text},
-    depends:   {type: :string, dependent: :dependent_method}
+    depends:   {type: :string, dependent: :dependent_method},
+    instances: {type: :belonging_processes}
   )
   def dependent_method
     float.present? && time.nil && date.present?

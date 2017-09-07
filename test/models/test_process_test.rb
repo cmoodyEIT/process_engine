@@ -31,4 +31,9 @@ class TestProcessTest < ActiveSupport::TestCase
     test_process = TestProcess.new(time: time.to_s)
     assert (time - test_process.time).abs < 1.0
   end
+  test "active record collection" do
+    test_process = TestProcess.new(instances: [first = BelongingProcess.create,second = BelongingProcess.create])
+    assert_includes test_process.instance_ids, first.id
+    assert_includes test_process.instance_ids, second.id
+  end
 end
