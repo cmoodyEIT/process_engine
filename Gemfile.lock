@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_process (0.1.0)
+    active_process (1.0)
       pg (~> 0.21)
       rails (~> 5.1.2)
 
